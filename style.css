@@ -249,14 +249,23 @@ a:visited {
 }
 
 @media (max-width: 500px) {
+  html {
+    font-size: 52%;
+  }
+
   body {
     flex-direction: column;
-    padding: 0.5rem;
+    padding: 0;
     flex-direction: column-reverse;
+  }
+
+  .logo {
+    margin-bottom: 1rem;
   }
 
   .sidebar {
     height: 55%;
     flex-basis: auto;
+    padding: 1rem;
   }
 }
