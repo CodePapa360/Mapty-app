@@ -3,6 +3,21 @@ I have finised building this Mapty after learning Object Oriented Programming (O
 
 - [👉Live demo👈](https://mapty-codepapa360.netlify.app/)
 
+### Extra features(challenges) added:
+- Ability to delete all Workouts
+- Ability to delete a workout
+
+### Features might be added:
+- Ability to edit a workout
+- Ability to sort workouts by a certain field (e.g. distance)
+- Re-build Running and Cycling objects coming from Local Storage
+- More realistic error and confirmation messages
+- Ability to position the map to show all workouts
+- Ability to draw lines and shapes instead of just points [very hard]
+- Geocode location from coordinates [asynchronous JavaScript]
+- Display weather data for workout time and place [asynchronous
+JavaScript]
+
 ### Built with
 
 - CSS custom properties
