@@ -31,7 +31,6 @@ body {
   overscroll-behavior-y: none;
 
   background-color: #fff;
-  padding: 2.5rem;
 
   display: flex;
 }
@@ -89,7 +88,29 @@ a:visited {
 .workout__title {
   font-size: 1.7rem;
   font-weight: 600;
-  grid-column: 1 / -1;
+  grid-column: 1 / 4;
+}
+
+.workout__btns {
+  grid-column: 4 / -1;
+  display: flex;
+  justify-content: space-between;
+}
+
+.workout__btn {
+  padding: 0.4rem 0.5rem;
+  font-size: 1.8rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.workout__btn--delete {
+  color: #ff2626;
+}
+
+.workout__btn--edit {
+  color: #00e77b;
 }
 
 .workout__details {
@@ -250,12 +271,11 @@ a:visited {
 
 @media (max-width: 500px) {
   html {
-    font-size: 47%;
+    font-size: 48%;
   }
 
   body {
     flex-direction: column;
-    padding: 0;
     flex-direction: column-reverse;
   }
 
