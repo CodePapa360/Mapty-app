@@ -9,6 +9,7 @@ const inputCadence = document.querySelector(".form__input--cadence");
 const inputElevation = document.querySelector(".form__input--elevation");
 const btnsCustomContainer = document.querySelector(".custom__btns");
 const btnReset = document.querySelector(".btn--reset");
+const btnEdit = document.querySelector(".workout__btn--edit");
 
 ///////////////////////////////////////
 // Common class for both type
@@ -90,6 +91,7 @@ class App {
     form.addEventListener("submit", this._newWorkout.bind(this));
     inputType.addEventListener("change", this._toggleElevationField);
     containerWorkouts.addEventListener("click", this._moveToPopup.bind(this));
+
     ///////////////////////////////////
     ///// Custom buttons
     btnReset.addEventListener("click", this.reset);
@@ -245,6 +247,14 @@ class App {
     let html = `
     <li class="workout workout--${workout.type}" data-id="${workout.id}">
           <h2 class="workout__title">${workout.description}</h2>
+          <div class="workout__btns">
+            <button class="workout__btn workout__btn--edit">
+              <i class="fa-solid fa-pen-to-square"></i>
+            </button>
+            <button class="workout__btn workout__btn--delete">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </div>
           <div class="workout__details">
             <span class="workout__icon">${
               workout.type === "running" ? "🏃" : "🚴"
@@ -290,12 +300,16 @@ class App {
         `;
 
     form.insertAdjacentHTML("afterend", html);
+
+    const btnDelete = document.querySelector(".workout__btn--delete");
+
+    btnDelete.addEventListener("click", this._deleteWorkout.bind(this));
   }
 
   _moveToPopup(e) {
     const workoutEl = e.target.closest(".workout");
 
-    if (!workoutEl) return;
+    if (!workoutEl || e.target.closest(".workout__btns")) return;
 
     const workout = this.#workouts.find(
       (work) => work.id === workoutEl.dataset.id
@@ -331,6 +345,21 @@ class App {
   reset() {
     localStorage.removeItem("workout");
     location.reload();
+  }
+
+  _deleteWorkout(e) {
+    const clickedId = e.target.closest(".workout").dataset.id;
+    const index = this.#workouts.findIndex((ind) => ind.id === clickedId);
+
+    this.#workouts.splice(index, 1);
+    localStorage.setItem("workout", JSON.stringify(this.#workouts));
+
+    if (this.#workouts.length === 0) {
+      localStorage.removeItem("workout");
+      btnsCustomContainer.classList.add("hidden");
+    }
+
+    e.target.closest(".workout").remove();
   }
 }
 
