@@ -92,16 +92,6 @@ class App {
     form.addEventListener("submit", this._newWorkout.bind(this));
     inputType.addEventListener("change", this._toggleElevationField);
     containerWorkouts.addEventListener("click", this._moveToPopup.bind(this));
-    containerWorkouts.addEventListener("click", (e) => {
-      const trashBin = e.target.closest(".workout__delete");
-      if (!trashBin) this._moveToPopup(e);
-      else {
-        const workoutEl = e.target.closest(".workout");
-        if (!workoutEl) return;
-        this.deleteWorkout(workoutEl.dataset.id);
-      }
-    });
-    // btnsCustomContainer.classList.add("hidden");
 
     ///////////////////////////////////
     ///// Custom buttons
@@ -218,8 +208,8 @@ class App {
     //Add the new object to the workout array
     this.#workouts.push(workout);
 
-    //Render workout on Map as marker
-    this._renderWorkoutMarker(workout);
+    // //Render workout on Map as marker
+    // this._renderWorkoutMarker(workout);
 
     //Render workout on list
     this._renderWorkout(workout);
@@ -238,7 +228,7 @@ class App {
   }
 
   _renderWorkoutMarker(workout) {
-    const mark = L.marker(workout.coords)
+    const marker = L.marker(workout.coords)
       .addTo(this.#map)
       .bindPopup(
         L.popup({
@@ -250,17 +240,15 @@ class App {
         })
       )
       .setPopupContent(
-        `${workout.type === "running" ? "🏃" : "🚴"} ${workout.description} ${
-          workout.coords
-        }`
+        `${workout.type === "running" ? "🏃" : "🚴"} ${workout.description}`
       )
       .openPopup();
 
     // Storing the markers
-    this.#markers.push(mark);
+    this.#markers.push(marker);
 
     // Attaching the id with the marker
-    mark.markID = workout.id;
+    marker.markID = workout.id;
   }
 
   _renderWorkout(workout) {
@@ -364,7 +352,7 @@ class App {
 
   reset() {
     localStorage.removeItem("workout");
-    // location.reload();
+    location.reload();
   }
 
   _deleteWorkout(e) {
@@ -375,9 +363,6 @@ class App {
     // Remove the workout from the array
     this.#workouts.splice(index, 1);
 
-    // Remove the marker from the map
-    this.#markers.find((work) => work.markID === clickedId).remove();
-
     // Update the local storage with the new workouts array
     localStorage.setItem("workout", JSON.stringify(this.#workouts));
 
@@ -387,6 +372,9 @@ class App {
       localStorage.removeItem("workout");
       btnsCustomContainer.classList.add("hidden");
     }
+
+    // Remove the marker from the map
+    this.#markers.find((work) => work.markID === clickedId).remove();
 
     // Remove the workout element from the page
     e.target.closest(".workout").remove();
