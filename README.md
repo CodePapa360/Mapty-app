@@ -5,7 +5,7 @@ I have finised building this Mapty after learning Object Oriented Programming (O
 
 ### Extra features(challenges) added:
 - Ability to delete all Workouts
-- Ability to delete a workout
+- Ability to delete a workout (with marker on the map)
 
 ### Features might be added:
 - Ability to edit a workout
