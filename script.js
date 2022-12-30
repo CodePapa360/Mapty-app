@@ -79,6 +79,7 @@ class App {
   #mapZoomLevel = 13;
   #mapEvent;
   #workouts = [];
+  #markers = [];
 
   constructor() {
     //Get position
@@ -91,6 +92,16 @@ class App {
     form.addEventListener("submit", this._newWorkout.bind(this));
     inputType.addEventListener("change", this._toggleElevationField);
     containerWorkouts.addEventListener("click", this._moveToPopup.bind(this));
+    containerWorkouts.addEventListener("click", (e) => {
+      const trashBin = e.target.closest(".workout__delete");
+      if (!trashBin) this._moveToPopup(e);
+      else {
+        const workoutEl = e.target.closest(".workout");
+        if (!workoutEl) return;
+        this.deleteWorkout(workoutEl.dataset.id);
+      }
+    });
+    // btnsCustomContainer.classList.add("hidden");
 
     ///////////////////////////////////
     ///// Custom buttons
@@ -209,6 +220,7 @@ class App {
 
     //Render workout on Map as marker
     this._renderWorkoutMarker(workout);
+
     //Render workout on list
     this._renderWorkout(workout);
     //Hide form + clear input fields
@@ -226,7 +238,7 @@ class App {
   }
 
   _renderWorkoutMarker(workout) {
-    L.marker(workout.coords)
+    const mark = L.marker(workout.coords)
       .addTo(this.#map)
       .bindPopup(
         L.popup({
@@ -238,9 +250,17 @@ class App {
         })
       )
       .setPopupContent(
-        `${workout.type === "running" ? "🏃" : "🚴"} ${workout.description}`
+        `${workout.type === "running" ? "🏃" : "🚴"} ${workout.description} ${
+          workout.coords
+        }`
       )
       .openPopup();
+
+    // Storing the markers
+    this.#markers.push(mark);
+
+    // Attaching the id with the marker
+    mark.markID = workout.id;
   }
 
   _renderWorkout(workout) {
@@ -344,21 +364,31 @@ class App {
 
   reset() {
     localStorage.removeItem("workout");
-    location.reload();
+    // location.reload();
   }
 
   _deleteWorkout(e) {
+    // Find the clicked workout element and the index of the workout in the array
     const clickedId = e.target.closest(".workout").dataset.id;
     const index = this.#workouts.findIndex((ind) => ind.id === clickedId);
 
+    // Remove the workout from the array
     this.#workouts.splice(index, 1);
+
+    // Remove the marker from the map
+    this.#markers.find((work) => work.markID === clickedId).remove();
+
+    // Update the local storage with the new workouts array
     localStorage.setItem("workout", JSON.stringify(this.#workouts));
 
+    // Check if the workouts array is empty
     if (this.#workouts.length === 0) {
+      // If it's empty, remove the workouts from local storage and hide the buttons
       localStorage.removeItem("workout");
       btnsCustomContainer.classList.add("hidden");
     }
 
+    // Remove the workout element from the page
     e.target.closest(".workout").remove();
   }
 }
