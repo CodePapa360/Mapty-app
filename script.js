@@ -209,7 +209,7 @@ class App {
     this.#workouts.push(workout);
 
     // //Render workout on Map as marker
-    // this._renderWorkoutMarker(workout);
+    this._renderWorkoutMarker(workout);
 
     //Render workout on list
     this._renderWorkout(workout);
